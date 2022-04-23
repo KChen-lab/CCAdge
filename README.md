@@ -24,7 +24,7 @@ The package requires only a standard computer with enough RAM to support the in-
 
 For usage examples and guided walkthroughs, check the `vignettes` directory of the repo.
 
-*  [Quick start in spatial transcriptomics data](https://htmlpreview.github.io/?https://github.com/KChen-lab/bindSC/blob/master/vignettes/ST_DEG.html)
+*  [Quick start in spatial transcriptomics data](https://htmlpreview.github.io/?https://github.com/KChen-lab/High_order_SComparison/blob/master/vignettes/ST_DEG.html)
 
 *  More to be added ... 
 
