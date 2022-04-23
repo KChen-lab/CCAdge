@@ -18,7 +18,7 @@ The package requires only a standard computer with enough RAM to support the in-
 * RAM: 10+ GB
 * CPU: 4+ cores, 2.3 GHz/core
 * Seurat (>=V3.0)
-* irlba, umap, rdist, EnhancedVolcano, gtools, ggpubr
+* R library: irlba, umap, rdist, EnhancedVolcano, gtools, ggpubr
 
 ## Usage 
 
