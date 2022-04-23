@@ -48,15 +48,15 @@ p2
 
 #### Stage 2: High-order DEGs detection between tumor clone 0 and 1
 
-Make sure the `factor` and `sample` be the same in `single` mode.
-`obj`:       Seurat object 
-`factor`:    Specify the phenotype column. `factor` column should be included in `obj@meta.data`
-`sample`:    Specify the sample column. `reduction` column should be included in `obj@meta.data`
-`assay`:     Specify the assay storing the expression level data
-`K`:         Specify the dimension of CCA space for gene differential detection (default:20)
-`genelst`:   Specify the variable gene list. If not specificed, the programe will determine genes with `min.frac>0.1` in at least one population.
-`mode`:      Specify the running mode. If `single`, there are no replicated samples. If `multiple`, there should be at least 2 samples in eacch condition.
-`min.frac`   Specfiy the gene filtering (default:0.1). 
+Make sure the `factor` and `sample` be the same in `single` mode. 
+`obj`:       Seurat object  
+`factor`:    Specify the phenotype column. `factor` column should be included in `obj@meta.data`  
+`sample`:    Specify the sample column. `reduction` column should be included in `obj@meta.data`  
+`assay`:     Specify the assay storing the expression level data  
+`K`:         Specify the dimension of CCA space for gene differential detection (default:20)  
+`genelst`:   Specify the variable gene list. If not specificed, the programe will determine genes with `min.frac>0.1` in at least one population.  
+`mode`:      Specify the running mode. If `single`, there are no replicated samples. If `multiple`, there should be at least 2 samples in eacch condition.  
+`min.frac`   Specfiy the gene filtering (default:0.1).  
 
 ```{r high-order DEG detection}
 

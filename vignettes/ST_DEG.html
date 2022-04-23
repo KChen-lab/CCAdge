@@ -395,7 +395,14 @@ p2</code></pre>
 </div>
 <div id="stage-2-high-order-degs-detection-between-tumor-clone-0-and-1" class="section level4">
 <h4>Stage 2: High-order DEGs detection between tumor clone 0 and 1</h4>
-<p>Make sure the <code>factor</code> and <code>sample</code> be the same in <code>single</code> mode. <code>obj</code>: Seurat object <code>factor</code>: Specify the phenotype column. <code>factor</code> column should be included in <code>obj@meta.data</code> <code>sample</code>: Specify the sample column. <code>reduction</code> column should be included in <code>obj@meta.data</code> <code>assay</code>: Specify the assay storing the expression level data <code>K</code>: Specify the dimension of CCA space for gene differential detection (default:20) <code>genelst</code>: Specify the variable gene list. If not specificed, the programe will determine genes with <code>min.frac&gt;0.1</code> in at least one population. <code>mode</code>: Specify the running mode. If <code>single</code>, there are no replicated samples. If <code>multiple</code>, there should be at least 2 samples in eacch condition. <code>min.frac</code> Specfiy the gene filtering (default:0.1).</p>
+<p>Make sure the <code>factor</code> and <code>sample</code> be the same in <code>single</code> mode. <code>obj</code>: Seurat object<br />
+<code>factor</code>: Specify the phenotype column. <code>factor</code> column should be included in <code>obj@meta.data</code><br />
+<code>sample</code>: Specify the sample column. <code>reduction</code> column should be included in <code>obj@meta.data</code><br />
+<code>assay</code>: Specify the assay storing the expression level data<br />
+<code>K</code>: Specify the dimension of CCA space for gene differential detection (default:20)<br />
+<code>genelst</code>: Specify the variable gene list. If not specificed, the programe will determine genes with <code>min.frac&gt;0.1</code> in at least one population.<br />
+<code>mode</code>: Specify the running mode. If <code>single</code>, there are no replicated samples. If <code>multiple</code>, there should be at least 2 samples in eacch condition.<br />
+<code>min.frac</code> Specfiy the gene filtering (default:0.1).</p>
 <pre class="r"><code>source(&quot;../source/DEG.R&quot;)</code></pre>
 <pre><code>## Loading required package: Matrix</code></pre>
 <pre><code>## Loading required package: ggrepel</code></pre>
