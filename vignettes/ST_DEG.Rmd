@@ -1,0 +1,105 @@
+---
+title: "High-order gene identification in spatial transcriptomics data"
+author: "jinzhuang dou @ kenchen' lab (MDACC)"
+date: "March 29, 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE, cache=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+This guide will demonstrate the usage of high-order gene detection in spatial transcriptomics data.  
+
+#### Stage 1: Load spatial transcriptomics data
+More data information can be seen in Fig2 (https://www.nature.com/articles/s41586-021-04217-4)
+
+```{r cars}
+# Load data 
+library(Seurat)
+obj <- readRDS(file="./../ST_tumor/data/tumor_slideSeq.RDS")
+
+```
+
+```{r visualization of tumor cells, message = FALSE, warning=FALSE, results='hide',fig.height=4, fig.width=9}
+library(ggpubr)
+p11 <- DimPlot(obj,label=T) + ggtitle("Cell state UMAP (all cells)")
+p12 <- DimPlot(obj, label=T, reduction = "spatial") + ggtitle("Spatial Map (all cells)")
+p1 <- ggarrange(p11,p12,ncol=2)
+p1
+```
+
+There are 12 clusters in spatial map (left), including both immune and tumor cells. We then extract the two tumor clones (cluster1 and 4) only and perform DEGs between these two tumor clones (taking ~5mins)
+
+```{r test }
+tumor <- subset(obj,cells=rownames(obj@meta.data)[obj@meta.data$celltype=="tumor"])
+Idents(tumor)<-tumor@meta.data$region
+DEGs <- FindAllMarkers(tumor, only.pos = FALSE,logfc.threshold = 0, min.pct = 0.1)
+```
+
+Visualize the tumor cells only in cell state UMAP (left) and spatial map (right).
+
+```{r visualization of tumor cells only, message = FALSE, warning=FALSE, results='hide',fig.height=4, fig.width=9}
+library(ggpubr)
+p21 <- DimPlot(tumor,label=T) + ggtitle("Cell state UMAP (tumor only)")
+p22 <- DimPlot(tumor, label=T, reduction = "spatial") + ggtitle("Spatial Map (tumor only)")
+p2 <- ggarrange(p21,p22,ncol=2)
+p2
+```
+
+#### Stage 2: High-order DEGs detection between tumor clone 0 and 1
+
+Make sure the `factor` and `sample` be the same in `single` mode.
+`obj`:       Seurat object 
+`factor`:    Specify the phenotype column. `factor` column should be included in `obj@meta.data`
+`sample`:    Specify the sample column. `reduction` column should be included in `obj@meta.data`
+`assay`:     Specify the assay storing the expression level data
+`K`:         Specify the dimension of CCA space for gene differential detection (default:20)
+`genelst`:   Specify the variable gene list. If not specificed, the programe will determine genes with `min.frac>0.1` in at least one population.
+`mode`:      Specify the running mode. If `single`, there are no replicated samples. If `multiple`, there should be at least 2 samples in eacch condition.
+`min.frac`   Specfiy the gene filtering (default:0.1). 
+
+```{r high-order DEG detection}
+
+source("../source/DEG.R")
+
+out <-HighOrder_Test(obj=tumor, 
+                     factor="region", 
+                     sample="region",
+                     assay="RNA", 
+                     K = 20, 
+                     genelst=NULL,
+                     T_latent=10^(-5),
+                     mode="single",
+                     min.frac = 0.1)
+
+```
+
+#### Stage 3: Comparison between High-order DEGs detection and traditional fold-changed based method
+
+```{r compare high-order DEGs with tradtional method, message = FALSE, warning=FALSE, results='hide',fig.height=5, fig.width=8}
+overlap <- intersect(rownames(out$sum_score), DEGs$gene)
+dt <- out$sum_score[overlap,]
+dt$avg_logFC <- DEGs[overlap,c("avg_logFC")]
+dt$p_adj<- DEGs[overlap,c("p_val_adj")]
+
+p <-DEGs_plot(dt=dt,T1=1,T2=10,T3=25,size=3)
+p
+
+
+```
+
+In above figure, x-axis shows the log_FC value and y-axis shows the p value of population-level mismatch score. There are genes showing high population-level mismatch score but low log_FC value. Two typical examples are Clu and Apoe, which are key inhibitors of tumor cell proliferation. In clone 1, Clu gene is highly expressed in the tumor clone boundary, indicating immune-tumor interaction events happening. 
+
+```{r check specfic genes, message = FALSE, warning=FALSE, results='hide',fig.height=5, fig.width=6}
+p3 <- FeaturePlot(tumor,features=c("Clu"),reduction = "spatial",min.cutoff = 1, label=T)
+p3<-customize_Seurat_FeaturePlot(p3, expression.threshold = 0,gradient.use = c( "blue", "white", "red"))
+p3
+
+p4 <- FeaturePlot(tumor,features=c("Apoe"),reduction = "spatial",min.cutoff = 1, label=T)
+p4<-customize_Seurat_FeaturePlot(p4, expression.threshold = 0,gradient.use = c( "blue", "white", "red"))
+p4
+
+
+```
+
+
